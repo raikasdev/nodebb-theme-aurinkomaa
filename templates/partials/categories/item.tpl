@@ -50,7 +50,7 @@
 	<div class="row col-sm-3 d-none d-md-flex align-self-start">
 		{{{ if !./link }}}
 		{{{ if !config.hideCategoryLastPost }}}
-		<div class="col-md-7 col-sm-3 teaser d-none d-sm-block" component="topic/teaser">
+		<div class="teaser d-none d-sm-block" component="topic/teaser">
 			<!-- IMPORT partials/categories/lastpost.tpl -->
 		</div>
 		{{{ end }}}
