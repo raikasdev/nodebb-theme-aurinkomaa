@@ -1,10 +1,10 @@
 {
-  "name": "nodebb-theme-harmony",
+  "name": "nodebb-theme-aurinkomaa",
   "version": "1.0.0-beta.83",
   "nbbpm": {
     "compatibility": "^3.0.0"
   },
-  "description": "Harmony theme for NodeBB",
+  "description": "Aurinkomaa theme for NodeBB",
   "main": "library.js",
   "repository": {
     "type": "git",

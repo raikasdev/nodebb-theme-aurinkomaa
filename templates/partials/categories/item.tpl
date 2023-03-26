@@ -16,14 +16,28 @@
 			{{{ end }}}
 			{{{ if !config.hideSubCategories }}}
 			{{{ if ./children.length }}}
-			<div class="category-children row row-cols-2 g-2">
+			<div class="category-children g-2 am-grid">
 				{{{ each ./children }}}
 				{{{ if !./isSection }}}
 				<span class="category-children-item small">
 					{{{ if ./link }}}
 					<a href="{./link}">{./name}</a>
 					{{{ else }}}
-					<a href="{config.relative_path}/category/{./slug}">{./name}</a>
+					<div class="d-flex gap-3 col-12 {{{ if config.hideCategoryLastPost }}}col-md-10 col-sm-12{{{ else }}}col-md-7 col-sm-9{{{ end }}}">
+						<div class="">
+						{buildCategoryIcon(@value, "35px", "rounded-1")}
+						</div>
+						<div class="d-flex flex-column flex-1">
+							<h3 class="fw-bold fs-6 mb-0">
+								<!-- IMPORT partials/categories/link.tpl -->
+							</h3>
+							{{{ if ./descriptionParsed }}}
+							<div class="description text-muted small">
+								{./descriptionParsed}
+							</div>
+							{{{ end }}}
+						</div>
+					</div>
 					{{{ end }}}
 				</span>
 				{{{ end }}}
