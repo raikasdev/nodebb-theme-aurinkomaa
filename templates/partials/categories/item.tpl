@@ -1,7 +1,7 @@
 <li component="categories/category" data-cid="{./cid}" class="row clearfix category-{./cid}">
 	<meta itemprop="name" content="{./name}">
 
-	<div class="d-flex gap-3 col-12 {{{ if config.hideCategoryLastPost }}}col-md-10 col-sm-12{{{ else }}}col-md-7 col-sm-9{{{ end }}}">
+	<div class="d-flex gap-3 col-12 {{{ if config.hideCategoryLastPost }}}col-md-10 col-sm-12{{{ else }}}col-sm-9{{{ end }}}">
 		<div class="">
 		{buildCategoryIcon(@value, "40px", "rounded-1")}
 		</div>
@@ -16,7 +16,7 @@
 			{{{ end }}}
 			{{{ if !config.hideSubCategories }}}
 			{{{ if ./children.length }}}
-			<div class="category-children row row-cols-2 g-2">
+			<div class="category-children row row-cols-2 g-3">
 				{{{ each ./children }}}
 				{{{ if !./isSection }}}
 				<span class="category-children-item small">
@@ -47,23 +47,8 @@
 			{{{ end }}}
 		</div>
 	</div>
-	<div class="row col-md-5 col-sm-3 d-none d-md-flex align-self-start">
+	<div class="row col-sm-3 d-none d-md-flex align-self-start">
 		{{{ if !./link }}}
-		<div class="col-md-5 d-none d-lg-flex stats text-muted gap-2 px-0">
-			<div class="w-50">
-				<div class="card card-header align-items-center px-0 py-2 border-0 rounded-1">
-					<span class="{./unread-class} human-readable-number fs-5 fw-semibold ff-secondary" title="{./totalTopicCount}">{./totalTopicCount}</span>
-					<span class="text-lowercase text-xs">[[global:topics]]</span>
-				</div>
-			</div>
-			<div class="w-50">
-				<div class="card card-header align-items-center px-0 py-2 border-0 rounded-1">
-					<span class="{./unread-class} human-readable-number fs-5 fw-semibold ff-secondary" title="{./totalPostCount}">{./totalPostCount}</span>
-					<span class="text-lowercase text-xs">[[global:posts]]</span>
-				</div>
-			</div>
-		</div>
-
 		{{{ if !config.hideCategoryLastPost }}}
 		<div class="col-md-7 col-sm-3 teaser d-none d-sm-block" component="topic/teaser">
 			<!-- IMPORT partials/categories/lastpost.tpl -->
