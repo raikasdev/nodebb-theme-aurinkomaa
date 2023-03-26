@@ -23,7 +23,7 @@
 					{{{ if ./link }}}
 					<a href="{./link}">{./name}</a>
 					{{{ else }}}
-					<div class="d-flex gap-3 col-12 {{{ if config.hideCategoryLastPost }}}col-md-10 col-sm-12{{{ else }}}col-md-7 col-sm-9{{{ end }}}">
+					<div class="w-100 d-flex gap-3 col-12 {{{ if config.hideCategoryLastPost }}}col-md-10 col-sm-12{{{ else }}}col-md-7 col-sm-9{{{ end }}}">
 						<div class="">
 						{buildCategoryIcon(@value, "35px", "rounded-1")}
 						</div>
