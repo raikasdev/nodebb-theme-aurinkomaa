@@ -5,10 +5,10 @@
 		<a class="background-link" href="{config.relative_path}/topic/{./topic.slug}{{{ if ./index }}}/{./index}{{{ end }}}"></a>
 		<p class="mb-0">
 			<a class="text-decoration-none" href="{config.relative_path}/user/{./user.userslug}">{buildAvatar(posts.user, "20px", true, "avatar-tooltip")}</a>
-			<a class="permalink text-dark fw-bold text-decoration-none" href="{config.relative_path}/topic/{./topic.slug}{{{ if ./index }}}/{./index}{{{ end }}}">
+			<a class="permalink fw-bold text-reset text-decoration-none" href="{config.relative_path}/topic/{./topic.slug}{{{ if ./index }}}/{./index}{{{ end }}}">
 				<span class="text-muted timeago text-xs" title="{../timestampISO}"></span>
 				<br />
-				<span class="truncate">{./topic.title}</span>
+				<span class="post-content overflow-hidden text-truncate line-clamp-1">{./topic.title}</span>
 			</a>
 		</p>
 		<div class="post-content overflow-hidden text-xs line-clamp-2">
