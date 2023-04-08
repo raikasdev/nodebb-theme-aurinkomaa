@@ -1,19 +1,9 @@
-Harmony theme for NodeBB
-====================
+# Aurinkomaa theme for NodeBB
 
-The Harmony theme is the default theme for NodeBB for versions spanning v3.0.0 onwards.
+A fork of the Harmony theme for NodeBB, customized for the needs of [Aurinkomaa](https://forum.maailmanloppu.fi) forums. It mostly includes patches only to the front page of the forum.
 
-## Issues
+## Changes
 
-Issues are tracked in [the main project issue tracker](https://github.com/NodeBB/NodeBB/issues?q=is%3Aopen+is%3Aissue+label%3Athemes).
-
-## Screenshots
-
-### Categories
-<img height="450" src="screenshots/categories.png">
-
-### Recent
-<img height="450" src="screenshots/recent.png">
-
-### Topic
-<img height="450" src="screenshots/topic.png">
+- Front page & categories page: Adding the name of the topic to the "lasttopic.tpl"-template, that shows latest message in a category.
+- Front page: Showing child categories of a category with the icons in a very nice looking way, instead of the ugly list of Harmony.
+- All pages: Showing the title of the forum only on larger devices
