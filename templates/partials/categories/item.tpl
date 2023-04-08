@@ -1,13 +1,8 @@
 <li component="categories/category" data-cid="{./cid}" class="w-100 border-bottom py-3 py-lg-4 gap-1 d-flex flex-column flex-lg-row align-items-start category-{./cid}">
 	<meta itemprop="name" content="{./name}">
 
-<<<<<<< HEAD
 	<div class="d-flex gap-3 col-12 {{{ if config.hideCategoryLastPost }}}col-md-10 col-sm-12{{{ else }}}col-sm-9{{{ end }}}">
 		<div class="">
-=======
-	<div class="d-flex col-lg-7 gap-2 gap-lg-3">
-		<div class="flex-shrink-0">
->>>>>>> 10eeb2106f08e4e3547a9fbdc5fcc6f91cc99b1c
 		{buildCategoryIcon(@value, "40px", "rounded-1")}
 		</div>
 		<div class="flex-grow-1 d-flex flex-wrap gap-1">
