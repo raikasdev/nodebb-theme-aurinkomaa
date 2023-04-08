@@ -14,14 +14,9 @@
 				<a class="text-decoration-none" href="{{{ if ./user.userslug }}}{config.relative_path}/user/{./user.userslug}{{{ else }}}#{{{ end }}}">
 					{buildAvatar(./user, "40px", true, "avatar avatar-tooltip")}
 				</a>
-				{{{ if showSelect }}}
-				<div class="checkbox position-absolute top-100 start-50 translate-middle-x p-1 m-0 d-none d-lg-flex" style="max-width:max-content">
-					<i component="topic/select" class="fa text-muted pointer fa-square-o"></i>
-				</div>
-				{{{ end }}}
 			</div>
 			<div class="flex-grow-1 d-flex flex-wrap gap-1">
-				<h3 component="topic/header" class="title text-break fs-5 fw-semibold m-0 tracking-tight w-100 {{{ if showSelect }}}me-4 me-lg-0{{{ end }}}">
+				<h3 component="topic/header" class="title text-break fs-5 fw-semibold m-0 tracking-tight w-100">
 					{{{ if topics.noAnchor }}}
 					<span>{./title}</span>
 					{{{ else }}}
@@ -56,7 +51,7 @@
 						{{{ end }}}
 					</span>
 					{{{ end }}}
-					<span class="hidden-xs badge bg-transparent text-muted fw-normal timeago" title="{./timestampISO}"></span>
+					<span class="hidden-xs bg-transparent text-muted fw-normal timeago" title="{./timestampISO}"></span>
 					{{{ if !config.theme.mobileTopicTeasers}}}
 					<span class="visible-xs-inline badge bg-transparent text-muted fw-normal timeago" title="{{{ if ./teaser.timestampISO }}}{./teaser.timestampISO}{{{ else }}}{./timestampISO}{{{ end }}}"></span>
 					{{{ end }}}
@@ -112,11 +107,6 @@
 				</div>
 			</div>
 		</div>
-		{{{ if showSelect }}}
-		<div class="checkbox position-absolute top-0 end-0 p-1 mt-3 m-0 d-flex d-lg-none" style="max-width:max-content">
-			<i component="topic/select" class="fa fa-square-o text-muted pointer"></i>
-		</div>
-		{{{ end }}}
 	</li>
 	{{{end}}}
 </ul>
