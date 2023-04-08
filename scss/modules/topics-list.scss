@@ -11,9 +11,6 @@ ul.topics-list, ul.categories-list {
 				color: $success!important;
 			}
 		}
-		p {
-			margin: 0 !important;
-		}
 
 		// all other skins use link-color for unread titles
 		&.unread .title {

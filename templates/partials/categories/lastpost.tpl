@@ -1,7 +1,7 @@
 <div class="lastpost background-link-container border-start border-2 lh-sm h-100" style="border-color: {./bgColor}!important;">
 	{{{ each ./posts }}}
 	{{{ if @first }}}
-	<div component="category/posts" class="ps-2 text-xs">
+	<div component="category/posts" class="ps-3">
 		<a class="background-link" href="{config.relative_path}/topic/{./topic.slug}{{{ if ./index }}}/{./index}{{{ end }}}"></a>
 		<p class="mb-0">
 			<a class="text-decoration-none" href="{config.relative_path}/user/{./user.userslug}">{buildAvatar(posts.user, "20px", true, "avatar-tooltip")}</a>
@@ -10,7 +10,7 @@
 				<br />
 				<span class="post-content overflow-hidden text-truncate line-clamp-1">{./topic.title}</span>
 			</a>
-		</div>
+		</p>
 		<div class="post-content text-xs text-break line-clamp-2 lh-sm">
 			{./content}
 		</div>
