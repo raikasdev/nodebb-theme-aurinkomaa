@@ -1,30 +1,20 @@
-.pagination-block { display: none; }
-
 .page-topic {
-	[component="topic/title"] {
-		font-size: 28px;
-		line-height: 34px;
-		font-weight: $font-weight-semibold;
-	}
-
-	.tag-list:empty {
-		display: none !important;
-	}
-
 	[component="topic/reply"], [component="topic/reply/locked"], [component="topic/reply/guest"] {
 		font-size: 14px;
 		line-height: 20px;
 	}
 
 	.topic {
-		.posts {
+		.posts-container {
 			max-width: 960px;
 			width: 960px;
+		}
+
+		.posts {
 			// fixes code blocks pushing content out on mobile
 			@include media-breakpoint-down(md) {
 				max-width: calc(100vw - $grid-gutter-width);
 			}
-			list-style-type: none;
 
 			&.timeline {
 				@include timeline-style;
@@ -39,7 +29,14 @@
 				}
 			}
 
+			> [component="post"] > [component="post/footer"] {
+				margin-left: calc($spacer * 2.5);
+			}
+
 			[component="post"] {
+				&.selected .post-container {
+					background-color: mix($body-bg, $body-color, 90%);
+				}
 				&.deleted .post-container {
 					opacity: .5;
 				}
@@ -47,18 +44,26 @@
 				[component="post/content"] {
 					@include fix-lists();
 
-					pre {
-						max-height: calc($font-size-base * 24);
+					> blockquote {
+						> blockquote {
+							> *:not(.blockquote) {
+								display: none;
+							}
+						}
+
+						> blockquote.uncollapsed {
+							> *:not(.blockquote) {
+								display: block;
+							}
+						}
+					}
+
+					@include media-breakpoint-up(lg) {
+						table { // text-break breaks table formatting
+						 	word-break:initial!important;
+						}
 					}
 				}
-
-				> [component="post/footer"] {
-					margin-left: calc($spacer * 2.5);
-				}
-			}
-
-			[component="post/reply-count"] {
-				font-size: $font-size-base * .75;
 			}
 
 			[component="post/upvote"], [component="post/downvote"] {
@@ -66,8 +71,7 @@
 					background-color: lighten($btn-ghost-hover-color, 5%);
 
 					&:hover {
-					background-color: $btn-ghost-hover-color;
-
+						background-color: $btn-ghost-hover-color;
 					}
 				}
 			}
@@ -75,15 +79,10 @@
 	}
 
 	.quick-reply {
-		max-width: 960px;
 		@include topic-avatars();
 	}
 
 	[component="post/replies/container"] {
-		&:empty {
-			display: none;
-		}
-
 		.icon {
 			display: none !important;
 		}
@@ -102,8 +101,9 @@
 
 		[component="post"] {
 			padding-top: 0 !important;
-
+			padding-bottom: $spacer;
 			&:last-of-type {
+				padding-bottom: 0;
 				.post-footer {
 					border-bottom: none !important;
 				}
@@ -111,13 +111,9 @@
 		}
 	}
 
-	.pagination-block {
-		display: block;
-		transition: opacity 250ms ease-in;
-		opacity: 0;
-		&.ready {
-			opacity: 1;
-		}
+
+	[component="topic/thumb/list"] {
+		height: calc($font-size-base * 4);
 	}
 }
 

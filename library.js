@@ -1,5 +1,6 @@
 'use strict';
 
+const nconf = require.main.require('nconf');
 const meta = require.main.require('./src/meta');
 const _ = require.main.require('lodash');
 const user = require.main.require('./src/user');
@@ -15,6 +16,7 @@ const defaults = {
 	stickyToolbar: 'on',
 	autohideBottombar: 'off',
 	openSidebars: 'off',
+	chatModals: 'off',
 };
 
 library.init = async function (params) {
@@ -28,24 +30,37 @@ library.init = async function (params) {
 		controllers.renderAdminPage
 	);
 
-	routeHelpers.setupPageRoute(
-		router,
-		'/user/:userslug/theme',
-		[
-			middleware.exposeUid,
-			middleware.ensureLoggedIn,
-			middleware.canViewUsers,
-			middleware.checkAccountPermissions,
-		],
-		controllers.renderThemeSettings
-	);
+	routeHelpers.setupPageRoute(router, '/user/:userslug/theme', [
+		middleware.exposeUid,
+		middleware.ensureLoggedIn,
+		middleware.canViewUsers,
+		middleware.checkAccountPermissions,
+	], controllers.renderThemeSettings);
+
+	if (nconf.get('isPrimary') && process.env.NODE_ENV === 'production') {
+		setTimeout(buildSkins, 0);
+	}
 };
+
+async function buildSkins() {
+	try {
+		const plugins = require.main.require('./src/plugins');
+		await plugins.prepareForBuild(['client side styles']);
+		for (const skin of meta.css.supportedSkins) {
+			// eslint-disable-next-line no-await-in-loop
+			await meta.css.buildBundle(`client-${skin}`, true);
+		}
+		require.main.require('./src/meta/minifier').killAll();
+	} catch (err) {
+		console.error(err.stack);
+	}
+}
 
 library.addAdminNavigation = async function (header) {
 	header.plugins.push({
 		route: '/plugins/harmony',
 		icon: 'fa-paint-brush',
-		name: 'Harmony Theme',
+		name: '[[themes/harmony:theme-name]]',
 	});
 	return header;
 };
@@ -55,7 +70,7 @@ library.addProfileItem = async (data) => {
 		id: 'theme',
 		route: 'theme',
 		icon: 'fa-paint-brush',
-		name: '[[harmony:settings.title]]',
+		name: '[[themes/harmony:settings.title]]',
 		visibility: {
 			self: true,
 			other: false,
@@ -120,12 +135,27 @@ library.defineWidgetAreas = async function (areas) {
 			template: 'global',
 			location: 'brand-header',
 		},
+		{
+			name: 'About me (before)',
+			template: 'account/profile.tpl',
+			location: 'profile-aboutme-before',
+		},
+		{
+			name: 'About me (after)',
+			template: 'account/profile.tpl',
+			location: 'profile-aboutme-after',
+		},
+		{
+			name: 'Chat Header',
+			template: 'chats.tpl',
+			location: 'header',
+		},
 	]);
 
 	return areas;
 };
 
-async function loadThemeConfig(uid) {
+library.loadThemeConfig = async function (uid) {
 	const [themeConfig, userConfig] = await Promise.all([
 		meta.settings.get('harmony'),
 		user.getSettings(uid),
@@ -142,11 +172,12 @@ async function loadThemeConfig(uid) {
 	config.stickyToolbar = config.stickyToolbar === 'on';
 	config.autohideBottombar = config.autohideBottombar === 'on';
 	config.openSidebars = config.openSidebars === 'on';
+	config.chatModals = config.chatModals === 'on';
 	return config;
-}
+};
 
 library.getThemeConfig = async function (config) {
-	config.theme = await loadThemeConfig(config.uid);
+	config.theme = await library.loadThemeConfig(config.uid);
 	config.openDraftsOnPageLoad = false;
 	return config;
 };
@@ -171,56 +202,7 @@ library.saveUserSettings = async function (hookData) {
 };
 
 library.filterMiddlewareRenderHeader = async function (hookData) {
-	const userSettings = await user.getSettings(hookData.req.uid);
-
-	const lightSkins = [
-		'default',
-		'cerulean',
-		'cosmo',
-		'flatly',
-		'journal',
-		'litera',
-		'lumen',
-		'lux',
-		'materia',
-		'minty',
-		'morph',
-		'pulse',
-		'quartz',
-		'sandstone',
-		'simplex',
-		'sketchy',
-		'spacelab',
-		'united',
-		'yeti',
-		'zephyr',
-	];
-	const darkSkins = [
-		'cyborg',
-		'darkly',
-		'slate',
-		'solar',
-		'superhero',
-		'vapor',
-	];
-	function parseSkins(skins) {
-		skins = skins.map(skin => ({
-			name: _.capitalize(skin),
-			value: skin === 'default' ? '' : skin,
-		}));
-		skins.forEach((skin) => {
-			skin.selected = skin.value === userSettings.bootswatchSkin;
-		});
-		return skins;
-	}
-
-	hookData.templateData.bootswatchSkinOptions = {
-		light: parseSkins(lightSkins),
-		dark: parseSkins(darkSkins),
-	};
-	hookData.templateData.currentBSSkin = _.capitalize(
-		hookData.templateData.bootswatchSkin
-	);
+	hookData.templateData.bootswatchSkinOptions = await meta.css.getSkinSwitcherOptions(hookData.req.uid);
 	return hookData;
 };
 

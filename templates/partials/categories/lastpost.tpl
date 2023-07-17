@@ -10,8 +10,8 @@
 				<br />
 				<span class="post-content overflow-hidden text-truncate line-clamp-1">{./topic.title}</span>
 			</a>
-		</p>
-		<div class="post-content text-xs text-break line-clamp-2 lh-sm">
+		</div>
+		<div class="post-content text-xs text-break line-clamp-sm-2 lh-sm">
 			{./content}
 		</div>
 	</div>

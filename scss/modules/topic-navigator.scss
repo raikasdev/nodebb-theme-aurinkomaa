@@ -1,5 +1,25 @@
+.pagination-block { display: none; }
+
+.page-topic {
+	// used for both sidebar and bottom bar pagination-block
+	.pagination-block {
+		display: block;
+		transition: opacity 250ms ease-in;
+		opacity: 0;
+		&.ready {
+			opacity: 1;
+		}
+		&.noreplies {
+			pointer-events: none;
+			opacity: 0.5;
+		}
+	}
+}
+
 .topic .pagination-block {
-	min-width: 150px;
+	.scroller-content {
+		min-width: 170px;
+	}
 	.scroller-container {
 		left: 10px;
 		height: 300px;

@@ -1,7 +1,7 @@
 <div class="{{{ if config.theme.stickyToolbar }}}sticky-tools{{{ end }}} mb-3">
-	<nav class="topic-list-header navbar navbar-expand p-0 border-0 rounded">
-		<div class="card card-header flex-row p-2 gap-1 border rounded w-100 align-items-center">
-			<ul component="category/controls" class="navbar-nav me-auto gap-2 align-items-start flex-wrap">
+	<nav class="topic-list-header d-flex flex-nowrap my-2 p-0 border-0 rounded">
+		<div class="d-flex flex-row p-2 text-bg-light gap-1 border rounded w-100 align-items-center">
+			<ul component="category/controls" class="d-flex list-unstyled me-auto mb-0 gap-2 align-items-start flex-wrap">
 				{{{ if template.category }}}
 				<!-- IMPORT partials/category/watch.tpl -->
 				<!-- IMPORT partials/tags/filter-dropdown-left.tpl -->
@@ -46,7 +46,7 @@
 				{{{ end }}}
 				<!-- only show login button if not logged in and doesn't have any posting privilege -->
 				{{{ if (!loggedIn && (!privileges.topics:create && !canPost))}}}
-				<a component="category/post/guest" href="{config.relative_path}/login" class="btn btn-primary">[[category:guest-login-post]]</a>
+				<a component="category/post/guest" href="{config.relative_path}/login" class="btn btn-sm btn-primary">[[category:guest-login-post]]</a>
 				{{{ end }}}
 			</div>
 		</div>

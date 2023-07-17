@@ -1,6 +1,7 @@
 'use strict';
 
 $(document).ready(function () {
+	setupSkinSwitcher();
 	setupNProgress();
 	setupMobileMenu();
 	setupSearch();
@@ -9,31 +10,34 @@ $(document).ready(function () {
 	setupNavTooltips();
 	fixPlaceholders();
 
-	$('[component="skinSwitcher"]').on('click', '.dropdown-item', function () {
-		const skin = $(this).attr('data-value');
-		$('[component="skinSwitcher"] .dropdown-item .fa-check').addClass('invisible');
-		$(this).find('.fa-check').removeClass('invisible');
-		require(['forum/account/settings'], function (accountSettings) {
-			$('[component="skinSwitcher"] [component="skinSwitcher/icon"]').addClass('fa-fade');
-			accountSettings.changeSkin(skin);
+	function setupSkinSwitcher() {
+		$('[component="skinSwitcher"]').on('click', '.dropdown-item', function () {
+			const skin = $(this).attr('data-value');
+			$('[component="skinSwitcher"] .dropdown-item .fa-check').addClass('invisible');
+			$(this).find('.fa-check').removeClass('invisible');
+			require(['forum/account/settings', 'hooks'], function (accountSettings, hooks) {
+				hooks.one('action:skin.change', function () {
+					$('[component="skinSwitcher"] [component="skinSwitcher/icon"]').removeClass('fa-fade');
+				});
+				$('[component="skinSwitcher"] [component="skinSwitcher/icon"]').addClass('fa-fade');
+				accountSettings.changeSkin(skin);
+			});
 		});
-	});
+	}
 
 	require(['hooks'], function (hooks) {
-		hooks.on('action:skin.change', function () {
-			$('[component="skinSwitcher"] [component="skinSwitcher/icon"]').removeClass('fa-fade');
-		});
-
 		$(window).on('action:composer.resize action:sidebar.toggle', function () {
-			$('[component="composer"]').css({
-				left: $('.sidebar-left').outerWidth(true),
+			const isRtl = $('html').attr('data-dir') === 'rtl';
+			const css = {
 				width: $('#panel').width(),
-			});
+			};
+			css[isRtl ? 'right' : 'left'] = $('.sidebar-left').outerWidth(true);
+			$('[component="composer"]').css(css);
 		});
 
 		hooks.on('filter:chat.openChat', function (hookData) {
-			// disables chat modals & goes straight to chat page
-			hookData.modal = false;
+			// disables chat modals & goes straight to chat page based on user setting
+			hookData.modal = config.theme.chatModals;
 			return hookData;
 		});
 	});
@@ -65,6 +69,9 @@ $(document).ready(function () {
 			$body.on('hidden.bs.dropdown', '.sticky-tools', function () {
 				bottomBar.removeClass('hidden');
 			});
+			function isSearchVisible() {
+				return !!$('[component="bottombar"] [component="sidebar/search"] .search-dropdown.show').length;
+			}
 
 			let lastScrollTop = 0;
 			let newPostsLoaded = false;
@@ -76,7 +83,7 @@ $(document).ready(function () {
 					lastScrollTop = st;
 					return;
 				}
-				if (st !== lastScrollTop && !navigator.scrollActive) {
+				if (st !== lastScrollTop && !navigator.scrollActive && !isSearchVisible()) {
 					const diff = Math.abs(st - lastScrollTop);
 					const scrolledDown = st > lastScrollTop;
 					const scrolledUp = st < lastScrollTop;
@@ -109,12 +116,8 @@ $(document).ready(function () {
 			});
 			hooks.on('action:ajaxify.end', function () {
 				$window.off('scroll', delayedScroll);
-				$body.removeClass('chat-loaded');
 				bottomBar.css({ bottom: 0 });
 				setTimeout(enableAutohide, 250);
-			});
-			hooks.on('action:chat.loaded', function () {
-				$body.toggleClass('chat-loaded', !!(ajaxify.data.template.chats && ajaxify.data.roomId));
 			});
 		});
 	}
@@ -216,9 +219,18 @@ $(document).ready(function () {
 		// remove title from user icon in sidebar to prevent double tooltip
 		$('.sidebar [component="header/avatar"] .avatar').removeAttr('title');
 		const tooltipEls = $('.sidebar [title]');
-		tooltipEls.tooltip({
+		const lefttooltipEls = $('.sidebar-left [title]');
+		const rightooltipEls = $('.sidebar-right [title]');
+		const isRtl = $('html').attr('data-dir') === 'rtl';
+		lefttooltipEls.tooltip({
 			trigger: 'manual',
 			animation: false,
+			placement: isRtl ? 'left' : 'right',
+		});
+		rightooltipEls.tooltip({
+			trigger: 'manual',
+			animation: false,
+			placement: isRtl ? 'right' : 'left',
 		});
 
 		tooltipEls.on('mouseenter', function (ev) {
@@ -246,11 +258,12 @@ $(document).ready(function () {
 			if (count > 1) {
 				const listEls = document.querySelectorAll(`[component="${type}/list"]`);
 				listEls.forEach((listEl) => {
-					const placeholder = listEl.querySelector('li');
-
-					for (let x = 0; x < count - 1; x++) {
-						const cloneEl = placeholder.cloneNode(true);
-						listEl.insertBefore(cloneEl, placeholder);
+					const placeholder = listEl.querySelector('*');
+					if (placeholder) {
+						for (let x = 0; x < count - 1; x++) {
+							const cloneEl = placeholder.cloneNode(true);
+							listEl.insertBefore(cloneEl, placeholder);
+						}
 					}
 				});
 			}
